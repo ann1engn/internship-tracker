@@ -1,6 +1,6 @@
 /* Design tokens: change a value here and it updates everywhere. */
 :root {
-  --bg: #f6f7f9;
+  --bg: #fff8fc;
   --surface: #ffffff;
   --border: #f9e9f3;
   --text: #1c2330;
@@ -52,12 +52,12 @@ p  { margin: 0; }
 .nav a {
   padding: var(--space-2) var(--space-3);
   border-radius: 8px;
-  color: var(--muted);
+  color: rgb(210, 167, 176);
   text-decoration: none;
   font-weight: 500;
 }
 .nav a:hover { background: var(--bg); color: var(--text); }
-.nav a.active { background: #e9eefd; color: var(--primary); }
+.nav a.active { background: #f8c6dd; color: var(--primary); }
 .account { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
 .account-email {
   color: var(--muted);
@@ -363,3 +363,137 @@ h1, h2 { font-family: var(--font-heading); font-weight: 600; }
   padding-top: var(--space-4);
 }
 .import-skipped { margin: 0; padding-left: var(--space-6); }
+
+/* ---------- Custom calendar ---------- */
+.datepicker { position: relative; }
+.datepicker-trigger {
+  width: 100%;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.datepicker-trigger svg { flex-shrink: 0; color: var(--primary); }
+.datepicker-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  width: min(304px, calc(100vw - 64px));
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(60, 20, 50, 0.16);
+}
+.datepicker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+.datepicker-month { font-weight: 600; }
+.datepicker-nav {
+  width: 36px;
+  height: 36px;
+  font: inherit;
+  font-size: 1.375rem;
+  line-height: 1;
+  color: var(--primary);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.datepicker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  justify-items: center;
+}
+.datepicker-weekday {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.datepicker-day {
+  width: 36px;
+  height: 36px;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--text);
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.datepicker-day:hover:not(:disabled),
+.datepicker-nav:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary) 14%, white);
+}
+.datepicker-day.is-today { border-color: var(--primary); }
+.datepicker-day.is-selected,
+.datepicker-day.is-selected:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+.datepicker-day:disabled,
+.datepicker-nav:disabled { color: var(--muted); opacity: 0.4; cursor: default; }
+.datepicker-footer { display: flex; justify-content: space-between; margin-top: var(--space-2); }
+.datepicker-footer .link-button:disabled { opacity: 0.4; cursor: default; }
+.datepicker-trigger:focus-visible,
+.datepicker-day:focus-visible,
+.datepicker-nav:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* ---------- Quote card ---------- */
+.quote-card {
+  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+.quote-image {
+  display: block;
+  max-width: 100%;
+  max-height: 250px;
+  border-radius: var(--radius);
+  object-fit: contain;
+}
+/* ---------- Form and quote card side by side ---------- */
+.top-row {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+.top-row > * { min-width: 0; margin-bottom: 0; }
+.top-row .quote-card { justify-content: center; }
+@media (max-width: 900px) {
+  .top-row { grid-template-columns: 1fr; }
+}
+/* ---------- Fixed frame so the quote button stays put ---------- */
+.quote-frame {
+  width: 100%;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quote-image { max-height: 100%; }

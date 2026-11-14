@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import CompanyLogo from '../components/CompanyLogo'
 import ImportCsv from '../components/ImportCsv'
+import DatePicker from '../components/DatePicker'
+import QuoteCard from '../components/QuoteCard'
 
 // The stages from the database, with a nicer label for the screen
 const STAGES = [
@@ -28,6 +30,24 @@ function statusLabel(value) {
   return STATUSES.find((s) => s.value === value)?.label ?? value
 }
 
+// Today's date in the format a date box expects: 2026-11-14
+function today() {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
+// "2026-11-14" becomes "Nov 14, 2026" for showing in the list
+function formatDate(value) {
+  const [year, month, day] = value.split('-').map(Number)
+  return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
 export default function Applications() {
   // Data from the database
   const [applications, setApplications] = useState([])
@@ -40,6 +60,7 @@ export default function Applications() {
   const [companyName, setCompanyName] = useState('')
   const [roleTitle, setRoleTitle] = useState('')
   const [location, setLocation] = useState('')
+  const [appliedDate, setAppliedDate] = useState(today())
   const [stage, setStage] = useState('applied')
   const [status, setStatus] = useState('active') // NEW
   const [saving, setSaving] = useState(false)
@@ -82,6 +103,7 @@ export default function Applications() {
     setCompanyName('')
     setRoleTitle('')
     setLocation('')
+    setAppliedDate(today())
     setStage('applied')
     setStatus('active')
     setFetchNote(null)
@@ -93,6 +115,7 @@ export default function Applications() {
     setCompanyName(application.companies.name)
     setRoleTitle(application.role_title)
     setLocation(application.location ?? '')
+    setAppliedDate(application.applied_date ?? '')
     setStage(application.stage)
     setStatus(application.status)
     setError('')
@@ -187,6 +210,7 @@ export default function Applications() {
       company_id: company.id,
       role_title: roleTitle,
       location: location.trim() || null,
+      applied_date: appliedDate || null,
       job_url: jobUrl.trim() || null,
       stage: stage,
       status: status,
@@ -254,7 +278,7 @@ export default function Applications() {
   return (
     <>
       <h1>Applications</h1>
-
+      <div className="top-row">
       <form className="card form-row" onSubmit={handleSubmit}>
         <h2 className="form-title">
           {editingId ? 'Edit application' : 'Add an application'}
@@ -320,6 +344,11 @@ export default function Applications() {
           />
         </label>
 
+        <div className="field">
+          <span>Date applied</span>
+          <DatePicker value={appliedDate} onChange={setAppliedDate} max={today()} />
+        </div>
+
         <label className="field">
           <span>Stage</span>
           <select value={stage} onChange={(e) => setStage(e.target.value)}>
@@ -358,6 +387,7 @@ export default function Applications() {
           )}
         </div>
       </form>
+      <QuoteCard /></div>
 
 
       <ImportCsv
@@ -411,6 +441,11 @@ export default function Applications() {
                   <span className="muted"> · {application.companies.name}</span>
                   {application.location && (
                     <div className="muted small">{application.location}</div>
+                  )}
+                  {application.applied_date && (
+                    <div className="muted small">
+                      Applied {formatDate(application.applied_date)}
+                    </div>
                   )}
                   {application.job_url && (
                     <div className="small">
