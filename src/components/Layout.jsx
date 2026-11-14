@@ -12,8 +12,8 @@ export default function Layout() {
         <span className="brand">Internship Tracker</span>
         <nav className="nav">
           <NavLink to="/" end>Applications</NavLink>
-          <NavLink to="/contacts">Contacts</NavLink>
           <NavLink to="/analytics">Analytics</NavLink>
+          <NavLink to="/contacts">Contacts</NavLink>
         </nav>
         <div className="account">
           <span className="account-email">{user?.email}</span>
