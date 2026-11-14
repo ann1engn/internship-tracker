@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import CompanyLogo from '../components/CompanyLogo'
 
 // The stages from the database, with a nicer label for the screen
 const STAGES = [
@@ -288,7 +289,7 @@ export default function Applications() {
           <span>Company</span>
           <input
             list="company-options"
-            placeholder="Type a company name"
+            placeholder="Company Name"
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
             autoComplete="off"
@@ -390,6 +391,10 @@ export default function Applications() {
           <ul className="list">
             {visibleApplications.map((application) => (
               <li key={application.id} className="list-item">
+                  <CompanyLogo
+                  key={application.companies.name}
+                  name={application.companies.name}
+                />
                 <div className="item-main">
                   <strong>{application.role_title}</strong>
                   <span className="muted"> · {application.companies.name}</span>
