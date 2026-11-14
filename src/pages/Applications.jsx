@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import CompanyLogo from '../components/CompanyLogo'
+import ImportCsv from '../components/ImportCsv'
 
 // The stages from the database, with a nicer label for the screen
 const STAGES = [
@@ -357,6 +358,16 @@ export default function Applications() {
           )}
         </div>
       </form>
+
+
+      <ImportCsv
+        applications={applications}
+        companies={companies}
+        onDone={async () => {
+          await loadApplications()
+          await loadCompanies()
+        }}
+      />
 
       <div className="card">
         <div className="filters">
