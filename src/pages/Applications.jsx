@@ -4,6 +4,7 @@ import CompanyLogo from '../components/CompanyLogo'
 import ImportCsv from '../components/ImportCsv'
 import DatePicker from '../components/DatePicker'
 import QuoteCard from '../components/QuoteCard'
+import confetti from 'canvas-confetti'
 
 // The stages from the database, with a nicer label for the screen
 const STAGES = [
@@ -190,6 +191,8 @@ export default function Applications() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+        // Remember the submit button, so confetti can launch from it later
+        const submitButton = event.currentTarget.querySelector('button[type="submit"]')
     setError('')
 
     const typedName = companyName.trim()
@@ -229,6 +232,21 @@ export default function Applications() {
     if (result.error) {
       setError(result.error.message)
     } else {
+      // Celebrate a new application (but not an edit)
+      if (!editingId) {
+        // Find the middle of the button, as a fraction of the screen
+        const box = submitButton.getBoundingClientRect()
+        confetti({
+          particleCount: 60,
+          spread: 80,
+          origin: {
+            x: (box.left + box.width / 2) / window.innerWidth,
+            y: (box.top + box.height / 2) / window.innerHeight,
+          },
+          colors: ['#e0518d', '#f7a8c8', '#ffd166', '#b9a7ff', '#ffffff'],
+          disableForReducedMotion: true,
+        })
+      }
       resetForm()
       await loadApplications()
     }
